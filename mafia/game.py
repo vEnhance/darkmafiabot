@@ -4,6 +4,7 @@ import random
 
 import lib
 import roles
+import player
 
 class FakeMaster():
 	def mkRequest(self, name, *args, **kwargs):
@@ -37,7 +38,7 @@ class MafiaGame():
 		#Daily vars
 		self.daylight = 1  #phase flag - currently day (night is 0)
 		self.day = 0 # day 0		
-		self.the_no_lynch = roles.NoLynch() # patch vote glitch
+		self.the_no_lynch = player.NoLynch() # patch vote glitch
 		self.day_max_len = 300 # seconds
 		self.night_max_len = 25
 		

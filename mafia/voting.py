@@ -1,4 +1,4 @@
-from actionclass import TargetAction, EmptyAction
+from action import TargetAction, EmptyAction
 
 def func_vote(caster, target):
 	#Unvote former player
