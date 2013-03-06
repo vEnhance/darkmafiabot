@@ -1,0 +1,6 @@
+test.py
+itemthoughts.txt
+*.pyc
+old/*
+doc/*
+!doc/help.tex
