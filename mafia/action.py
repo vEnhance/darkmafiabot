@@ -5,12 +5,13 @@ class Action:
 	queue = 0 # if this is set to 1, then queue to night instead
 	priority = 0 # priority of a queued night action
 	can_use_if_dead = 0 # prevent dead people from doing stuff
+	max_uses = -1 # -1 if infinite, otherwise positive integer
 
 	def __init__(self, main, **kwargs):
 		self.main = main
 		for key in kwargs:
 			setattr(self, key, kwargs[key])
-	def __call__(self, caster, request=None):
+	def __call__(self, caster, name, request=None):
 		if not caster.alive and not self.can_use_if_dead:
 			caster.quietLog("Dead men tell no tales!")
 			return lib.ERROR_BAD_USE
@@ -23,10 +24,28 @@ class Action:
 			except AssertionError as e:
 				caster.quietLog(e[0])
 				return lib.ERROR_BAD_USE
+		# Check num_uses
+		if self.max_uses == -1: pass # Irrelevant
+		elif caster.num_left[name] == 0:
+			caster.quietLog("This ability has been used the maximum number of times.  No further use is permitted.")
+			return lib.ERROR_BAD_USE
+		else:
+			caster.quietLog("OK, you can use this ability at most %d times now." %(caster.num_left[name]-1))
+		# If night action, submit to the game's queue
 		if self.queue:
 			self.confirmReceived(caster, *args)
-			caster.parent_game.submitNightAction(key=self.nGetKey(caster), priority=self.priority, caster=caster, args=(caster,)+args, action=self.main)
+			#Submit the night action
+			caster.parent_game.submitNightAction(
+					key = self.nGetKey(caster),
+					priority = self.priority,
+					caster = caster,
+					args = (caster,)+args,
+					action = self.main,
+					name = name,
+					obj = self)
 		else:
+			# Reduce number of uses if not a one-shot action
+			if self.max_uses != -1: caster.num_left[name] -= 1
 			try:
 				return self.main(caster, *args)
 			except TypeError:
