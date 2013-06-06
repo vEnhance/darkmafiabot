@@ -216,8 +216,8 @@ def func_dayvig(self, victim):
 action_dayvig = TargetAction(func_dayvig)
 
 def func_mafiaDaykill(self, victim):
-	if self.daybulletLastUsed == self.parent_game.day:
-		self.quietLog("You cannot perform multiple daykills")
+	if self.day_bullet_last_used == self.parent_game.day:
+		self.quietLog("You cannot perform multiple daykills.")
 		return ERROR_BAD_USE
 	if victim.bulletproof == "NO" and victim.alive == 1:
 		self.parent_game.killPlayer(victim, "Killed" + " " + self.parent_game.getCurrentPhase())
@@ -225,7 +225,7 @@ def func_mafiaDaykill(self, victim):
 		self.parent_game.pubLog("An attempt to kill %s was foiled!" %victim)
 	else:
 		pass
-	self.daybulletLastUsed = self.parent_game.day
+	self.day_bullet_last_used = self.parent_game.day
 	self.roleblocked = "TONIGHT"
 action_daykill = TargetAction(func_mafiaDaykill)	
 
@@ -239,7 +239,7 @@ class DayVig(Town):
 class CrazedFiend(Mafia):
 	player_type = "CRAZED FIEND"
 	rolePM = "You are a Crazed Fiend. You are one of the Mafia but you may kill during the day. You can kill someone during the day with the command \"/daykill username\". However, if you choose to daykill, all night actions you submit will fail. Your daykill is indistinguishable from that of a vigilante. \n You are mafia-aligned. You win if all non-mafia members are eliminated. You can check your partner list with the command \"/getpartners\". You can kill at night with the command \"/kill username\"."
-	daybulletLastUsed = 0
+	day_bullet_last_used = 0
 	day_methods = dict(Mafia.day_methods, dayvig = action_daykill)
 	
 	
@@ -371,10 +371,11 @@ class IndepMUP(MUP):
 # mafiabot-only roles {{{1
 # Anti-Jester {{{2
 def func_findjesters(self):
-	if [t.public_name for t in self.parent_game.playerList if t.player_type in ["JESTER","FOOL"]] == []:
+	jester_names = [t.public_name for t in self.parent_game.playerList if t.player_type in ["JESTER","FOOL"]]
+	if len(jester_names) == 0:
 		return_msg = "There are no jesters."
 	else:
-		return_msg = "The jesters are " + " and ".join([t.public_name for t in self.parent_game.playerList if t.player_type in ["JESTER","FOOL"]]) + "."
+		return_msg = "The jesters are " + " and ".join(jester_names) + "."
 	self.quietLog(return_msg)
 action_findjesters = EmptyAction(func_findjesters)
 	
