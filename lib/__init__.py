@@ -1,7 +1,7 @@
 import haiku
 
 ADMINS = ["chen.evan6", "the.wicked.star", "darkmafiabot2013", "rz11943"]
-FEMALE_PLAYERS = ["jtogetherwestandh", "emeralde.alchemiste"]
+FEMALE_PLAYERS = ["jtogetherwestandh", "emeralde.alchemiste", "jingjing2357"]
 
 # Eventually these messages should be long and obnoxious.  Below are placeholders.
 DEAD_TALK_MSG = "You're dead.  Shut up."
