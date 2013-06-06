@@ -24,7 +24,13 @@ class Player():
 	align = None # alignment
 	vote_target = None # keeps track of who's voting what
 	
-	num_votes_on = 0 # sum of weights of people voting me
+	@property
+	def num_votes_on(): # sum of weights of people voting me
+		num=0
+		for player in self.voters:
+			num+=player.vote_weight
+		return num
+	
 	bah = 0
 	
 	#mods
@@ -48,6 +54,16 @@ class Player():
 	day_methods = DEFAULT_DAY
 	night_methods = DEFAULT_NIGHT
 
+	#Lovers
+	love_target=None
+	
+	@property
+	def fanboys():
+		list=[]
+		for player in self.parent_game.player_list:
+			if player.love_target==self:
+				list.append(player)
+		return list
 	#Names
 	public_name = None
 	private_name = None
@@ -111,7 +127,11 @@ class Player():
 	#Special events
 	def onLynch(self, caster): pass
 	def onNightKill(self, caster): pass
-	def onDeath(self): pass
+	def onDeath(self):
+		for player in self.fanboys:
+			self.parent_game.killPlayer(player,
+				"Suicided " + self.parent_game.getCurrentPhase(),
+				surpress = 1)
 
 	def quietLog(self, text):
 		# Relay to master
