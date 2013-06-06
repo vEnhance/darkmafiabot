@@ -437,6 +437,7 @@ class PlagueDoctor(Town):
 	night_methods = dict(Town.night_methods, cure=action_cure)
 	cured = []
 	def onDeath(self):
+		Player.onDeath(self)
 		self.parent_game.pubLog("UHOH")
 		# Goes through each player
 		for currPlayer in [player for player in self.parent_game.playerList if (player != self and not player in self.cured)]:
