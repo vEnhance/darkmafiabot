@@ -76,8 +76,7 @@ class Player():
 		for method_dict in (self.day_methods, self.night_methods):
 			for method_name in method_dict:
 				method = method_dict[method_name]
-				if method.max_uses != -1:
-					self.num_left[method_name] = method.max_uses
+				self.num_left[method_name] = method.max_uses
 		self.endow()
 
 		# Set non-primitive attributes:

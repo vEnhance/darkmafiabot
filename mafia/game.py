@@ -219,13 +219,12 @@ class MafiaGame():
 				queue_caster = action_dict["caster"]
 				queue_function = action_dict["action"]
 				queue_action_name = action_dict["action_name"]
-				queue_orig_action = action_dict["obj"]
 				if queue_caster.roleblocked == "NO":
 					queue_function(*queue_args)
 				for target in queue_args[1:]:
 					if target.paranoid == "YES":
 						target.addDeathMark(by=queue_caster, day=self.day)
-				if queue_orig_action.max_uses != -1:
+				if queue_caster.num_left[queue_action_name] != -1:
 					queue_caster.num_left[queue_action_name] -= 1
 		#Proceed to kill if necessary		
 
