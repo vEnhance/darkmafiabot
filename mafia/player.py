@@ -30,6 +30,14 @@ class Player():
 		for player in self.voters:
 			num+=player.vote_weight
 		return num
+		
+	@property
+	def voters(): # list of people voting me
+		v=[]
+		for player in self.parent_game.player_list:
+			if player.vote_target=self:
+				v.append(player)
+		return v
 	
 	bah = 0
 	
@@ -91,8 +99,7 @@ class Player():
 		# Set non-primitive attributes:
 		self.death_marks = {} # death marks
 		# key is night number, value is killer
-		self.voters = [] # list of people voting me
-
+		
 		for key in kwargs:
 			setattr(self, key, kwargs[key])
 		if private_name is not None:
