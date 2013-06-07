@@ -56,12 +56,9 @@ class Player():
 	day_methods = DEFAULT_DAY
 	night_methods = DEFAULT_NIGHT
 
-	#Lovers
-	love_target=None
-	
 	@property
 	def fanboys(self):
-		return [player for player in self.parent_game.player_list if player.love_target == self]
+		return [player for player in self.parent_game.player_list if self in player.love_target]
 
 	#Names
 	public_name = None
@@ -85,6 +82,7 @@ class Player():
 		# Initialize method dictionaries
 		self.day_methods = copy.copy(self.day_methods)
 		self.night_methods = copy.copy(self.night_methods)
+		self.love_targets = []
 		self.num_left = {}
 		# Place limited uses on any methods with a maximum use limit
 		for method_dict in (self.day_methods, self.night_methods):
@@ -134,7 +132,7 @@ class Player():
 	def onDeath(self):
 		for player in self.fanboys:
 			self.parent_game.killPlayer(player,
-				"Suicided " + self.parent_game.getCurrentPhase(),
+				"Committed suicide on " + self.parent_game.getCurrentPhase(),
 				surpress = 1)
 
 	def quietLog(self, text):
