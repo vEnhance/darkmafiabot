@@ -58,7 +58,7 @@ class Player():
 
 	@property
 	def fanboys(self):
-		return [player for player in self.parent_game.player_list if self in player.love_target]
+		return [player for player in self.parent_game.player_list if self in player.love_targets]
 
 	#Names
 	public_name = None
