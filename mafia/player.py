@@ -26,11 +26,11 @@ class Player():
 	
 	@property
 	def num_votes_on(self): # sum of weights of people voting me
-		return sum([player.vote_weight for player in self.voters])
+		return sum([player.vote_weight for player in self.parent_game.player_list if player.vote_target == self])
 		
 	@property
 	def voters(self): # list of people voting me
-		return [player for player in self.parent_game.player_ilst if player.vote_target == self]
+		return [player for player in self.parent_game.player_list if player.vote_target == self]
 	
 	bah = 0
 	

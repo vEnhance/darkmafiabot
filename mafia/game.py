@@ -254,8 +254,6 @@ class MafiaGame():
 			
 				#Reset all votes
 				currPlayer.vote_target = None
-				currPlayer.num_votes_on = 0
-				currPlayer.voters = []
 		
 		#Game-level vars
 		self.peaceful_night = 1 #Flag
