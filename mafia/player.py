@@ -25,19 +25,12 @@ class Player():
 	vote_target = None # keeps track of who's voting what
 	
 	@property
-	def num_votes_on(): # sum of weights of people voting me
-		num=0
-		for player in self.voters:
-			num+=player.vote_weight
-		return num
+	def num_votes_on(self): # sum of weights of people voting me
+		return sum([player.vote_weight for player in self.voters])
 		
 	@property
-	def voters(): # list of people voting me
-		v=[]
-		for player in self.parent_game.player_list:
-			if player.vote_target=self:
-				v.append(player)
-		return v
+	def voters(self): # list of people voting me
+		return [player for player in self.parent_game.player_ilst if player.vote_target == self]
 	
 	bah = 0
 	
@@ -66,12 +59,9 @@ class Player():
 	love_target=None
 	
 	@property
-	def fanboys():
-		list=[]
-		for player in self.parent_game.player_list:
-			if player.love_target==self:
-				list.append(player)
-		return list
+	def fanboys(self):
+		return [player for player in self.parent_game.player_list if player.love_target == self]
+
 	#Names
 	public_name = None
 	private_name = None
