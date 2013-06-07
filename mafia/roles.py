@@ -122,6 +122,8 @@ class RandomCop(GeneralCop):
 	def endow(self):
 		self.sanity_func = lambda self, x: random.randrange(0,2)
 
+# Cops who reveal their roles on death
+# We use lying_role = 1 so that their death role and actual role are different
 class RevealOnDeathCop(GeneralCop):
 	lying_role = 1
 
@@ -204,16 +206,11 @@ class Mason(Town):
 # Killer roles {{{2
 #Day kills
 def func_dayvig(self, victim):
-	if self.bulletUsed == 1:
-		self.quietLog("You already used your bullet")
-		return ERROR_BAD_USE
 	if victim.bulletproof == "NO" and victim.alive == 1:
 		self.parent_game.killPlayer(victim, "Killed" + " " + self.parent_game.getCurrentPhase())
-		self.bulletUsed = 1
 	elif victim.bulletproof != "NO" and victim.alive == 1:
 		self.parent_game.pubLog("An attempt to kill %s was foiled!" %victim)
-		self.bulletUsed = 1
-action_dayvig = TargetAction(func_dayvig)
+action_dayvig = TargetAction(func_dayvig, max_uses = 1)
 
 def func_mafiaDaykill(self, victim):
 	if self.day_bullet_last_used == self.parent_game.day:
@@ -233,7 +230,6 @@ action_daykill = TargetAction(func_mafiaDaykill)
 class DayVig(Town):	
 	player_type = "DAY VIGILANTE"
 	rolePM = "You are a Day Vigilante. You can kill someone during the day with the command \"/dayvig username\". You may only use this ability once in your game. Your kills will show up with a generic \"Killed Day X\"." + STANDARD_TOWN_ALIGNED_PM
-	bulletUsed = 0
 	day_methods = dict(Town.day_methods, dayvig = action_dayvig)
 	
 class CrazedFiend(Mafia):

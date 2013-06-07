@@ -52,6 +52,7 @@ class Player():
 	player_type = "ERRORPERSON"
 	rolePM = "You are bored."
 	
+	# Methods
 	day_methods = DEFAULT_DAY
 	night_methods = DEFAULT_NIGHT
 
@@ -69,7 +70,7 @@ class Player():
 
 	activated = False
 	
-	# Talk Channel System {{{3
+	# Talk Channel System {{{1
 	talk_index = 0 # The currently addressed channel
 	talk_channels = [] # List of acceptable talk channels
 	def currentChannel(self):
@@ -81,9 +82,15 @@ class Player():
 	# }}}
 	
 	def __init__(self, private_name = None, **kwargs):
-		#Endow with certain actions
+		# Initialize method dictionaries
 		self.day_methods = copy.copy(self.day_methods)
 		self.night_methods = copy.copy(self.night_methods)
+		self.num_left = {}
+		# Place limited uses on any methods with a maximum use limit
+		for method_dict in (self.day_methods, self.night_methods):
+			for method_name in method_dict:
+				method = method_dict[method_name]
+				self.num_left[method_name] = method.max_uses
 		self.endow()
 
 		# Set non-primitive attributes:
@@ -112,7 +119,7 @@ class Player():
 			self.parent_game.master.mkRequest(name = "action_not_allowed", caster = self)
 			return 1 # returns 1 so core knows a bad action occurred, maybe.
 		# Create an instance of that action class
-		action_obj(self, request)
+		action_obj(caster = self, name = act_name, request = request)
 		return 0
 
 	def getMethod(self, name): 

@@ -5,12 +5,15 @@ class Action:
 	queue = 0 # if this is set to 1, then queue to night instead
 	priority = 0 # priority of a queued night action
 	can_use_if_dead = 0 # prevent dead people from doing stuff
+	max_uses = -1 # -1 if infinite, otherwise positive integer
+	# by design, this attribute is never read again for determining routine procedures
+	# instead, it is copied to the Player object and read there
 
 	def __init__(self, main, **kwargs):
 		self.main = main
 		for key in kwargs:
 			setattr(self, key, kwargs[key])
-	def __call__(self, caster, request=None):
+	def __call__(self, caster, name, request=None):
 		if not caster.alive and not self.can_use_if_dead:
 			caster.quietLog("Dead men tell no tales!")
 			return lib.ERROR_BAD_USE
@@ -23,10 +26,27 @@ class Action:
 			except AssertionError as e:
 				caster.quietLog(e[0])
 				return lib.ERROR_BAD_USE
+		# Check num_uses
+		if caster.num_left[name] == -1: pass # Irrelevant
+		elif caster.num_left[name] == 0:
+			caster.quietLog("This ability has been used the maximum number of times.  No further use is permitted.")
+			return lib.ERROR_BAD_USE
+		else:
+			caster.quietLog("OK, this command has %d uses remaining." %(caster.num_left[name]-1))
+		# If night action, submit to the game's queue
 		if self.queue:
 			self.confirmReceived(caster, *args)
-			caster.parent_game.submitNightAction(key=self.nGetKey(caster), priority=self.priority, caster=caster, args=(caster,)+args, action=self.main)
+			#Submit the night action
+			caster.parent_game.submitNightAction(
+					key = self.nGetKey(caster),
+					priority = self.priority,
+					caster = caster,
+					args = (caster,)+args,
+					action = self.main,
+					name = name)
 		else:
+			# Reduce number of uses if not a one-shot action
+			if caster.num_left[name] != -1: caster.num_left[name] -= 1
 			try:
 				return self.main(caster, *args)
 			except TypeError:
@@ -36,6 +56,9 @@ class Action:
 				print "Caster is", caster
 				print args
 				print lib.colors.ENDCOLOR
+	def checkOtherConditions(self, caster, *args):
+		"""Called after arguments are parsed.  If an assertion is thrown here, the action is aborted.  Overload this to restrict actions."""
+		pass
 	def confirmReceived(self, caster, *args):
 		caster.parent_game.master.mkRequest(name = "command_received", caster = caster)
 	def nGetKey(self, caster):
@@ -46,9 +69,9 @@ class Action:
 	needs_alive = 1 # needs target alive
 	
 	def __repr__(self):
-		funcRaw = str(self.main)
-		funcName = funcRaw.split(' ')[1]
-		return "Action " + funcName
+		func_raw = str(self.main)
+		func_name = func_raw.split(' ')[1]
+		return "Action " + func_name
 
 class TargetAction(Action):
 	def parser(self, caster, request):

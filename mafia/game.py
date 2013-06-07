@@ -204,7 +204,7 @@ class MafiaGame():
 	def submitNightAction(self, key, priority, **valueDict):
 		# key should be distinct, used to prevent people from submitting multiple night actions
 		self.night_queue[self.day] = self.night_queue.get(self.day, {})
-		self.night_queue[self.day][key] = [priority, valueDict]
+		self.night_queue[self.day][key] = (priority, valueDict)
 		#Low numbers => higher priority
 		
 	
@@ -214,16 +214,20 @@ class MafiaGame():
 			sortedQueue = self.night_queue.get(self.day, {}).values()
 			sortedQueue.sort() #This causes a sort by priority
 			for currList in sortedQueue:
-				actionDict = currList[1]
-				queue_args = actionDict["args"]
-				queue_caster = actionDict["caster"]
-				queue_function = actionDict["action"]
+				action_dict = currList[1]
+				queue_args = action_dict["args"]
+				queue_caster = action_dict["caster"]
+				queue_function = action_dict["action"]
+				queue_action_name = action_dict["action_name"]
 				if queue_caster.roleblocked == "NO":
 					queue_function(*queue_args)
 				for target in queue_args[1:]:
 					if target.paranoid == "YES":
 						target.addDeathMark(by=queue_caster, day=self.day)
+				if queue_caster.num_left[queue_action_name] != -1:
+					queue_caster.num_left[queue_action_name] -= 1
 		#Proceed to kill if necessary		
+
 		for victim in self.player_list:
 			if not victim.alive: continue
 			if not victim.death_marks.has_key(self.day): continue
