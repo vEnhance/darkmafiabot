@@ -53,6 +53,13 @@ class Vigilante(Town):
 	player_type = "NIGHT VIGILANTE"
 	rolePM = "You are a Vigilante. You can kill people at night using \"/vig username\"." + STANDARD_TOWN_ALIGNED_PM
 	night_methods = dict(Town.night_methods, vig = action_vig_kill)
+class OneShotVigilante(Vigilante):
+	player_type = "ONE-SHOT NIGHT VIGILANTE"
+	rolePM = "You are a one-shot vigilante. You can kill people at night using \"/vig username\".  This may be used only once per game." + STANDARD_TOWN_ALIGNED_PM
+	def endow(self):
+		self.num_left['vig'] = 1
+
+
 
 # Healing roles {{{2
 def func_protect(self, target):
