@@ -224,7 +224,7 @@ class MafiaGame():
 				queue_args = action_dict["args"]
 				queue_caster = action_dict["caster"]
 				queue_function = action_dict["action"]
-				queue_action_name = action_dict["action_name"]
+				queue_action_name = action_dict["name"]
 				if queue_caster.roleblocked == "NO":
 					queue_function(*queue_args)
 				for target in queue_args[1:]:

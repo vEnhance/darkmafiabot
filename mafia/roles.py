@@ -207,8 +207,8 @@ class TRoleBlocker(Town):
 # Standard weirdness {{{1
 # Cupid Roles {{{2
 def func_cupid(self,target1,target2):
-	target1.love_target=target2
-	target2.love_target.target1
+	target1.love_targets.append(target2)
+	target2.love_targets.append(target1)
 action_cupid = DualTargetAction(func_cupid, queue=1, priority=50)
 
 class Cupid(Town):

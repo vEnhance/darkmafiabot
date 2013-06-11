@@ -81,18 +81,18 @@ class TargetAction(Action):
 		assert player is not None, "No such player"
 		assert player.alive or not self.needs_alive, "Needs target to be alive."
 		return (player,)
-# class DualTargetAction(Action):
-	# def parser(self, caster, request):
+class DualTargetAction(Action):
+	def parser(self, caster, request):
 		# Parses everything after the command name
 		# e.g. "/kill ilovepink" then request="ilovepink"
-		# r=request
-		# player = caster.parent_game.p(r[0])
-		# assert player is not None, "No such player"
-		# assert player.alive or not self.needs_alive, "Needs target to be alive."
-		# player1 = caster.parent_game.p(r[1])
-		# assert player1 is not None, "No such player"
-		# assert player1.alive or not self.needs_alive, "Needs target to be alive."
-		# return (player,player1)
+		r=request
+		player = caster.parent_game.p(r[0])
+		assert player is not None, "No such player"
+		assert player.alive or not self.needs_alive, "Needs target to be alive."
+		player1 = caster.parent_game.p(r[1])
+		assert player1 is not None, "No such player"
+		assert player1.alive or not self.needs_alive, "Needs target to be alive."
+		return (player,player1)
 class TextAction(Action):
 	def parser(self, caster, request):
 		return (request,)
