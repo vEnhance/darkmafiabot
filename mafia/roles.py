@@ -1,7 +1,7 @@
 # 
 import random
 from player import Player
-from action import EmptyAction, TextAction, TargetAction
+from action import EmptyAction, TextAction, TargetAction, DualTargetAction
 from lib import ERROR_BAD_USE
 
 # Low level stuff {{{1
@@ -206,16 +206,16 @@ class TRoleBlocker(Town):
 # }}}
 # Standard weirdness {{{1
 # Cupid Roles {{{2
-#def func_cupid(self,target1,target2):
-#	target1.love_target=target2
-#	target2.love_target.target1
-#action_cupid = TargetAction(func_cupid, queue=1, priority=50)
+def func_cupid(self,target1,target2):
+	target1.love_target=target2
+	target2.love_target.target1
+action_cupid = DualTargetAction(func_cupid, queue=1, priority=50)
 
-#class Cupid(Town):
-#	player_type = "CUPID"
-#	rolePM = "You are a Cupid. Each night, you may couple two people together with the command \"/c username1 username2\"; they will die together." + STANDARD_TOWN_ALIGNED_PM
-#	night_methods = dict(Town.night_methods, c=action_cupid)
-#TODO make actions able to take more than one target
+class Cupid(Town):
+	player_type = "CUPID"
+	rolePM = "You are a Cupid. Each night, you may couple two people together with the command \"/c username1 username2\"; they will die together." + STANDARD_TOWN_ALIGNED_PM
+	night_methods = dict(Town.night_methods, c=action_cupid)
+#TODO fix Cupid
 
 # Alignment roles {{{2
 class Mason(Town):
