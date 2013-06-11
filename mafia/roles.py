@@ -215,7 +215,15 @@ class Cupid(Town):
 	player_type = "CUPID"
 	rolePM = "You are a Cupid. Each night, you may couple two people together with the command \"/c username1 username2\"; they will die together." + STANDARD_TOWN_ALIGNED_PM
 	night_methods = dict(Town.night_methods, c=action_cupid)
-#TODO fix Cupid
+
+def func_unrequited_cupid(self,target1,target2):
+	target1.love_targets.append(target2)
+action_unrequited_cupid = DualTargetAction(func_unrequited_cupid, queue=1, priority=50)
+
+class UnrequitedCupid(Town):
+	player_type = "CUPID"
+	rolePM = "You are a Cupid. Each night, you may make someone fall in love with another person with the command \"/c username1 username2\"; they will die when their lover does." + STANDARD_TOWN_ALIGNED_PM
+	night_methods = dict(Town.night_methods, c=action_unrequited_cupid)
 
 # Alignment roles {{{2
 class Mason(Town):
