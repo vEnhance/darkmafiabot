@@ -145,7 +145,6 @@ class MafiaGame():
 		target.alive = 0
 
 		# Change counts
-		self.num_alive -= 1
 		self.team_count[target.align] -= 1
 
 		# Tell master that someone died

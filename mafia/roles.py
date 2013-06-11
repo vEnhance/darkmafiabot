@@ -193,10 +193,23 @@ class TRoleBlocker(Town):
 	player_type = "ROLEBLOCKER"
 	rolePM = "You are a Roleblocker. You can roleblock anyone during the night with the command \"/roleblock username\"; they will not be able to perform any action at the night you blocked them." + STANDARD_TOWN_ALIGNED_PM
 	night_methods = dict(Mafia.day_methods, roleblock=action_roleblock)
+	#Wait, why does the town roleblocker get mafia day methods o.O?
 
 
 # }}}
 # Standard weirdness {{{1
+# Cupid Roles {{{2
+#def func_cupid(self,target1,target2):
+#	target1.love_target=target2
+#	target2.love_target.target1
+#action_cupid = TargetAction(func_cupid, queue=1, priority=50)
+
+#class Cupid(Town):
+#	player_type = "CUPID"
+#	rolePM = "You are a Cupid. Each night, you may couple two people together with the command \"/c username1 username2\"; they will die together." + STANDARD_TOWN_ALIGNED_PM
+#	night_methods = dict(Town.night_methods, c=action_cupid)
+#TODO make actions able to take more than one target
+
 # Alignment roles {{{2
 class Mason(Town):
 	talk_channels = ["MASON 1"]
@@ -206,9 +219,9 @@ class Mason(Town):
 # Killer roles {{{2
 #Day kills
 def func_dayvig(self, victim):
-	if victim.bulletproof == "NO" and victim.alive == 1:
+	if victim.bulletproof == "NO" and victim.alive:
 		self.parent_game.killPlayer(victim, "Killed" + " " + self.parent_game.getCurrentPhase())
-	elif victim.bulletproof != "NO" and victim.alive == 1:
+	elif victim.bulletproof != "NO" and victim.alive:
 		self.parent_game.pubLog("An attempt to kill %s was foiled!" %victim)
 action_dayvig = TargetAction(func_dayvig, max_uses = 1)
 
@@ -216,9 +229,9 @@ def func_mafiaDaykill(self, victim):
 	if self.day_bullet_last_used == self.parent_game.day:
 		self.quietLog("You cannot perform multiple daykills.")
 		return ERROR_BAD_USE
-	if victim.bulletproof == "NO" and victim.alive == 1:
+	if victim.bulletproof == "NO" and victim.alive:
 		self.parent_game.killPlayer(victim, "Killed" + " " + self.parent_game.getCurrentPhase())
-	elif victim.bulletproof != "NO" and victim.alive == 1:
+	elif victim.bulletproof != "NO" and victim.alive:
 		self.parent_game.pubLog("An attempt to kill %s was foiled!" %victim)
 	else:
 		pass

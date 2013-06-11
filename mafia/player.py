@@ -20,7 +20,7 @@ DEFAULT_NIGHT = {
 class Player():
 	#Logistics
 	parent_game = None
-	alive = 1 # 0 when not alive
+	alive = True # False when not alive
 	align = None # alignment
 	vote_target = None # keeps track of who's voting what
 	
