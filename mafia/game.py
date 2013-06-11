@@ -33,7 +33,6 @@ class MafiaGame():
 		self.player_list = copy.copy(setup)
 		if kwargs.get("shuffle", True):
 			random.shuffle(self.player_list)
-		self.num_alive = len(setup)
 		
 		#Daily vars
 		self.daylight = 1  #phase flag - currently day (night is 0)
@@ -65,6 +64,14 @@ class MafiaGame():
 
 		for key in kwargs:
 			setattr(self, key, kwargs[key])
+	
+	@property
+	def num_alive(self):
+		i=0
+		for player in self.player_list:
+			if player.alive == 1:
+				i+=1
+		return i
 	
 	# __repr__ and __getitem__, for debugging use mainly {{{1
 	def __repr__(self):
@@ -141,11 +148,11 @@ class MafiaGame():
 		self.num_alive -= 1
 		self.team_count[target.align] -= 1
 
-		# Run onDeath
-		target.onDeath()
-
 		# Tell master that someone died
 		self.master.mkRequest(name="death", player=target)
+		
+		# Run onDeath
+		target.onDeath()
 
 		if surpress == 0:
 			self.checkIfWin()
