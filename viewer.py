@@ -48,8 +48,6 @@ class Viewer:
 		elif request == 'pm':
 			if not self.master.game.game_started:
 				return "You may not view your role PM until the game starts."
-			elif kwargs['is_group']:
-				return "Please use a private channel when viewing your role PM."
 			else:
 				caster = kwargs['caster']
 				ret = "ROLE PM for game %s" %self.master.game
@@ -78,11 +76,14 @@ class Viewer:
 	# Updaters (when model says so) {{{1
 
 	def pubLog(self, text):
-		self.master.send_message(mto=self.master.room, mbody=text, mtype='groupchat')
+		# self.master.send_message(mto=self.master.room, mbody=text, mtype='groupchat')
+		# ^ DEPRECATED by google hangouts
+		for mto in self.master.subscribers:
+			self.master.send_message(mto=mto, mbody=text, mtype='chat')
 		return 0
 	def quietLog(self, to, text):
 		if to.activated:
-			self.master.send_message(mto=to.public_name + "@gmail.com", mbody=text, mtype='chat')
+			self.master.send_message(mto=to.gmail_username, mbody=text, mtype='chat')
 		return 0
 	update_public_log = pubLog
 	update_quiet_log = quietLog

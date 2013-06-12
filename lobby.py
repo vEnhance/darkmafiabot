@@ -1,37 +1,36 @@
 import mafia.setups
 import string
+import lib
 
 class Lobby:
 	LOBBY_COMMANDS = ('confirm', 'setup', 'setup_', 'start', 'register')
 
 	def __init__(self, master):
 		self.master = master
-		self.nick_to_gmail = {}
 		self.signed_up = []
 
 	def handle(self, **kwargs):
 		return getattr(self, "handle_" + kwargs['cmd_name'])(**kwargs)
 
 	def handle_confirm(self, **kwargs):
-		nick = kwargs['nick']
-		new_name = self.nick_to_gmail.get(nick, "")
-
-		if new_name == "":
-			if not kwargs['request']:
-				return "Gmail is being retarded; please include your Gmail username with your request command."
-			else:
-				new_name = kwargs['request']
+		new_name = kwargs['request'] # If there is a name afterwards in the confirm
+		new_address = kwargs['address'] # e.g. bob@mit.edu
+		if new_name.strip() == "":
+			new_name = lib.DEFAULT_PUBLIC_NAMES.get(kwargs['sender'], kwargs['sender']) # e.g. kwargs['sender'] = "chen.evan6"
 
 		# Make sure user isn't already registered
 		for spot in self.master.game.player_list:
+			if spot.gmail_username == new_address:
+				return "You have already registered for this Mafia game."
 			if spot.public_name == new_name:
-				return "You've already registered."
+				return "The name %s is already taken." %new_name
 
 		# Search for unused spots
 		for spot in self.master.game.player_list:
 			# Determine whether the spot is open
 			if not spot.activated:
 				spot.public_name = new_name
+				spot.gmail_username = new_address
 				spot.activated = True
 				self.master.mkRequest('public_log', text = "%s has joined the game." %new_name)
 				return 0

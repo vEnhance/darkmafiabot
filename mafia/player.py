@@ -65,7 +65,9 @@ class Player():
 	private_name = None
 	pid = None
 
-	activated = False
+	# Higher-level properties
+	activated = False   # whether this spot is taken in the Mafia game
+	gmail_username = "" # e.g. "gotgotmilk@gmail.com"
 	
 	# Talk Channel System {{{1
 	talk_index = 0 # The currently addressed channel
