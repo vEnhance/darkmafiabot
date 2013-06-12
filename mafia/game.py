@@ -10,7 +10,7 @@ class FakeMaster():
 	def mkRequest(self, name, *args, **kwargs):
 		print lib.colors.STARTCOLOR +  name + lib.colors.ENDCOLOR + ":", args, kwargs
 	def setPhaseTimer(self, *args, **kwargs):
-		print lib.colors.STARTCOLOR, "Timer", lib.colors.ENDCOLOR + ":",  args, kwargs
+		print lib.colors.STARTCOLOR + "Timer" + lib.colors.ENDCOLOR + ":",  args, kwargs
 
 class MafiaGame():	
 	""" MafiaGame instance.
