@@ -222,7 +222,7 @@ action_unrequited_cupid = DualTargetAction(func_unrequited_cupid, queue=1, prior
 
 class UnrequitedCupid(Town):
 	player_type = "CUPID"
-	rolePM = "You are a Cupid. Each night, you may make someone fall in love with another person with the command \"/c username1 username2\"; they will die when their lover does." + STANDARD_TOWN_ALIGNED_PM
+	rolePM = "You are a Cupid. Each night, you may make someone fall in love with another person with the command \"/c username1 username2\"; the first user will die immediately when the second one does, but not vice-versa." + STANDARD_TOWN_ALIGNED_PM
 	night_methods = dict(Town.night_methods, c=action_unrequited_cupid)
 
 # Alignment roles {{{2

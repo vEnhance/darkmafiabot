@@ -67,11 +67,7 @@ class MafiaGame():
 	
 	@property
 	def num_alive(self):
-		i=0
-		for player in self.player_list:
-			if player.alive == 1:
-				i+=1
-		return i
+		return len([player for player in self.player_list if player.alive is True])
 	
 	# __repr__ and __getitem__, for debugging use mainly {{{1
 	def __repr__(self):
